@@ -34,7 +34,11 @@ public class FirstServlet extends HttpServlet {
 
 	protected void doGet(HttpServletRequest request, HttpServletResponse response)
 			throws ServletException, IOException {
-		
+		if (request.getParameter("submit") == null) {
+			//index(request, response);
+			response.sendRedirect("index.jsp");
+			return;
+		}
 	}
 
 	protected void doPost(HttpServletRequest request, HttpServletResponse response)
@@ -113,12 +117,14 @@ public class FirstServlet extends HttpServlet {
 			request.setAttribute("log", "logging");
 			request.setAttribute("username", request.getParameter("username"));
 			index(request, response);
+			return;
 		}
 
 		if (isFieldNull(request, "username") && !isFieldNull(request, "password")) {
 			request.setAttribute("signInCheck", "username empty");
 			request.setAttribute("log", "logging");
 			index(request, response);
+			return;
 		}
 
 		ResultSet rs = SQL.getRS(request.getParameter("username"));
@@ -127,10 +133,12 @@ public class FirstServlet extends HttpServlet {
 			request.setAttribute("signInCheck", "username doesn't exist");
 			request.setAttribute("log", "logging");
 			index(request, response);
+			return;
 		}
 
 		if (checkPassword(rs, request)) {
 			connectUser(rs, request, response);
+			return;
 
 		} else {
 
@@ -138,8 +146,8 @@ public class FirstServlet extends HttpServlet {
 			request.setAttribute("username", request.getParameter("username"));
 			request.setAttribute("log", "logging");
 			index(request, response);
+			return;
 		}
-
 	}
 
 	private void save(HttpServletRequest request, HttpServletResponse response)
